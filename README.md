@@ -4,3 +4,5 @@
 [Страница курса](https://otus.ru/lessons/setevoy-inzhener-basic/)
 
 [Лабораторные работы](Labs/)
+
+[Проектная работа](Project/)
