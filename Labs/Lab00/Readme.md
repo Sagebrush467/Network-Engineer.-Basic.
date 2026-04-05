@@ -287,6 +287,7 @@ end
 
 b. проверим параметры vlan 1
 
+```
 S1#sho int vlan 1
 Vlan1 is up, line protocol is up
   Hardware is CPU Interface, address is 0006.2a98.68a0 (bia 0006.2a98.68a0)
@@ -309,13 +310,19 @@ Vlan1 is up, line protocol is up
      563859 packets output, 0 bytes, 0 underruns
      0 output errors, 23 interface resets
      0 output buffer failures, 0 output buffers swapped out
+```
 
 Видим что интерфейс работает, назанчен ip адрес 192.168.1.2 с маской 255.255.255.0
 В выводе мы можем увидеть BW 100000 Kbit. Это означает полосу пропускания 100000 Кбит/с (97,65 Мбит/с)
 
 
 Шаг 2. Проверим связь ПК с коммутатором.
+
+
+
 Шаг 3. Проверим удалённое управление коммутатором.
+
+
 
 Сохраним конфигурацию коммутатора в энергонезависимой памяти командой "copy running-config startup-config". Проверяем наличие файла конфигурации командой dir nvram:. Проверяем startup config командой show startup-config.
 После перезагрузки коммутатора, либо после его отключения настройки не пропадут.
