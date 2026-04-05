@@ -322,7 +322,7 @@ Vlan1 is up, line protocol is up
 
 ![](32.png)
 
-Сохраним конфигурацию коммутатора в энергонезависимой памяти командой `copy running-config startup-config`. Проверяем наличие файла конфигурации командой dir nvram:. Проверяем startup config командой `show startup-config`.
+Сохраним конфигурацию коммутатора в энергонезависимой памяти командой `copy running-config startup-config`. Проверяем наличие файла конфигурации командой `dir nvram:`. Проверяем startup config командой `show startup-config`.
 После перезагрузки коммутатора, либо после его отключения настройки не пропадут.
 
 ![](33.png)
