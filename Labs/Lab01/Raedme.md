@@ -100,3 +100,195 @@ S2(config-if)#ip add 192.168.1.12 255.255.255.0
 S2(config-if)#end
 S2#copy running-config startup-config
 ```
+
+№## Часть 2. зучение таблицы МАС-адресов коммутатор.
+
+- Шаг 1. Изучим мак адреса сетевых устройств.
+Изучим вывод команды `ipconfig /all` на ПК.
+
+- PC-A
+```
+C:\>ipconfig /all
+
+FastEthernet0 Connection:(default port)
+
+   Connection-specific DNS Suffix..: 
+   Physical Address................: 0001.6328.A230
+   Link-local IPv6 Address.........: FE80::201:63FF:FE28:A230
+   IPv6 Address....................: ::
+   IPv4 Address....................: 192.168.1.1
+   Subnet Mask.....................: 255.255.255.0
+   Default Gateway.................: ::
+                                     0.0.0.0
+   DHCP Servers....................: 0.0.0.0
+   DHCPv6 IAID.....................: 
+   DHCPv6 Client DUID..............: 00-01-00-01-BC-97-D0-9C-00-01-63-28-A2-30
+   DNS Servers.....................: ::
+                                     0.0.0.0
+
+Bluetooth Connection:
+
+   Connection-specific DNS Suffix..: 
+   Physical Address................: 00E0.8FB5.2711
+   Link-local IPv6 Address.........: ::
+   IPv6 Address....................: ::
+   IPv4 Address....................: 0.0.0.0
+   Subnet Mask.....................: 0.0.0.0
+   Default Gateway.................: ::
+                                     0.0.0.0
+   DHCP Servers....................: 0.0.0.0
+   DHCPv6 IAID.....................: 
+   DHCPv6 Client DUID..............: 00-01-00-01-BC-97-D0-9C-00-01-63-28-A2-30
+   DNS Servers.....................: ::
+                                     0.0.0.0
+```
+
+- PC-B
+
+```
+C:\>ipconfig /all
+
+FastEthernet0 Connection:(default port)
+
+   Connection-specific DNS Suffix..: 
+   Physical Address................: 00D0.D3A0.D11E
+   Link-local IPv6 Address.........: FE80::2D0:D3FF:FEA0:D11E
+   IPv6 Address....................: ::
+   IPv4 Address....................: 192.168.1.2
+   Subnet Mask.....................: 255.255.255.0
+   Default Gateway.................: ::
+                                     0.0.0.0
+   DHCP Servers....................: 0.0.0.0
+   DHCPv6 IAID.....................: 
+   DHCPv6 Client DUID..............: 00-01-00-01-38-94-D9-E1-00-D0-D3-A0-D1-1E
+   DNS Servers.....................: ::
+                                     0.0.0.0
+
+Bluetooth Connection:
+
+   Connection-specific DNS Suffix..: 
+   Physical Address................: 00D0.BA4E.2787
+   Link-local IPv6 Address.........: ::
+   IPv6 Address....................: ::
+   IPv4 Address....................: 0.0.0.0
+   Subnet Mask.....................: 0.0.0.0
+   Default Gateway.................: ::
+                                     0.0.0.0
+   DHCP Servers....................: 0.0.0.0
+   DHCPv6 IAID.....................: 
+   DHCPv6 Client DUID..............: 00-01-00-01-38-94-D9-E1-00-D0-D3-A0-D1-1E
+   DNS Servers.....................: ::
+                                     0.0.0.0
+```
+
+В выводе команды мы можем увидеть мак адресав строке `Physical address`.
+
+Для PA-A: 0001.6328.A230
+
+Для PC-B: 00D0.D3A0.D11E
+
+Подключимся по консольному порту к коммутаторам S1 и S2. На каждом коммутаторе введём команду `show interface F0/1`
+
+- S1
+
+```
+S1>en
+Password:
+S1#show int fa0/1
+FastEthernet0/1 is up, line protocol is up (connected)
+  Hardware is Lance, address is 0090.0cb8.7b01 (bia 0090.0cb8.7b01)
+ BW 100000 Kbit, DLY 1000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  Keepalive set (10 sec)
+  Full-duplex, 100Mb/s
+  input flow-control is off, output flow-control is off
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 00:00:08, output 00:00:05, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue :0/40 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     956 packets input, 193351 bytes, 0 no buffer
+     Received 956 broadcasts, 0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+     0 watchdog, 0 multicast, 0 pause input
+     0 input packets with dribble condition detected
+     2357 packets output, 263570 bytes, 0 underruns
+     0 output errors, 0 collisions, 10 interface resets
+     0 babbles, 0 late collision, 0 deferred
+     0 lost carrier, 0 no carrier
+     0 output buffer failures, 0 output buffers swapped out
+```
+
+- S2
+
+```
+S2>en
+Password: 
+S2#sho int fa0/1
+FastEthernet0/1 is up, line protocol is up (connected)
+  Hardware is Lance, address is 0007.ecb2.ae01 (bia 0007.ecb2.ae01)
+ BW 100000 Kbit, DLY 1000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  Keepalive set (10 sec)
+  Full-duplex, 100Mb/s
+  input flow-control is off, output flow-control is off
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 00:00:08, output 00:00:05, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue :0/40 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     956 packets input, 193351 bytes, 0 no buffer
+     Received 956 broadcasts, 0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+     0 watchdog, 0 multicast, 0 pause input
+     0 input packets with dribble condition detected
+     2357 packets output, 263570 bytes, 0 underruns
+     0 output errors, 0 collisions, 10 interface resets
+     0 babbles, 0 late collision, 0 deferred
+     0 lost carrier, 0 no carrier
+     0 output buffer failures, 0 output buffers swapped out
+```
+
+Из вывода команды мы можем увидеть мак-адрес интерфейса и вшитый адрес (bia). Можно заметить что оба адреса совпадают.
+
+S1: 0090.0cb8.7b01
+
+S2: 0007.ecb2.ae01
+
+- Шаг 2. Посмотреть таблицу MAC-адресов коммутатора.
+
+Подключимся по консольному порту коммутатора S2. из привилегированного режима введём команду `show mac address-table`
+
+```
+S2>en
+Password:
+S2#sho mac add
+          Mac Address Table
+-------------------------------------------
+
+Vlan    Mac Address       Type        Ports
+----    -----------       --------    -----
+
+   1    0090.0cb8.7b01    DYNAMIC     Fa0/1
+S2#
+```
+
+из вывода команды виден только мак от S1
+
+###ВАЖНОЕ НАБЛЮДЕНИЕ###
+
+В методичке указано:
+
+```
+Даже если сетевая коммуникация в сети не происходила (т. е. если команда ping не отправлялась), коммутатор может узнать МАС-адреса при подключении к ПК и другим коммутаторам.
+```
+
+Однако в Cisco Packet Tracer 8.1.1 мак-адреса ПК будут отображаться после успешного ICMP-запроса к коммутатору.
