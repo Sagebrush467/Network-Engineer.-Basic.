@@ -77,8 +77,12 @@ S1(config)#line vty 0 15
 S1(config-line)#password cisco
 S1(config-line)#login
 S1(config-line)#exit
+S2(config)#line con 0
+S1(config-line)#password cisco
+S1(config-line)#login
+S1(config-line)#exit
 S1(config)#enable secret class
-S1(config)# int vlan 1
+S1(config)#int vlan 1
 S1(config-if)#ip add 192.168.1.11 255.255.255.0
 S1(config-if)#no shutdown
 S1#copy running-config startup-config
@@ -90,6 +94,10 @@ S1#copy running-config startup-config
 Switch(config)#hostname S2
 S2(config)#service password-encryption
 S2(config)#line vty 0 15
+S2(config-line)#password cisco
+S2(config-line)#login
+S2(config-line)#exit
+S2(config)#line con 0
 S2(config-line)#password cisco
 S2(config-line)#login
 S2(config-line)#exit
