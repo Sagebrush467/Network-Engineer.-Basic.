@@ -136,3 +136,237 @@ R1(config)#int gi 0/0/1
 R1(config-if)#no shutdown
 R1(config-if)#ipv6 address 2001:db8:acad:1::1/64
 ```
+
+Проверим какие IPv6-адреса назначены интерфейсам.
+
+```
+R1#show ipv6 interface brief 
+GigabitEthernet0/0/0       [up/up]
+    FE80::200:CFF:FE77:AB01
+    2001:DB8:ACAD:A::1
+GigabitEthernet0/0/1       [up/up]
+    FE80::200:CFF:FE77:AB02
+    2001:DB8:ACAD:1::1
+GigabitEthernet0/0/2       [administratively down/down]
+    unassigned
+Vlan1                      [administratively down/down]
+    unassigned
+```
+
+Из вывода команды мы видим что лоакльные адреса не совпадают с теми что, должны быть в таблице адресации.
+Это случилось потому что каждому интерефейсу автоматически присваевается уникальный локальный IPv6 адрес. InterfaceID назначается с использованием генератора случайных чисел либо с использованием процесса EUI-64.
+В случае с маршрутизатором можно увидеть что InterfaceID назначены с использованием EUI-64. Так как для назначения адреса используется мак адрес интерфейса, в середину вставляется значение fffe, 7-й бит мак адреса меняется с двоичного 0 на 1
+
+Проверим:
+
+```
+R1#show interfaces gi0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up (connected)
+  Hardware is ISR4331-3x1GE, address is 0000.0c77.ab01 (bia 0000.0c77.ab01)
+  
+R1#show ipv6 interface gigabitEthernet 0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up
+  IPv6 is enabled, link-local address is FE80::200:CFF:FE77:AB01
+  ```
+  
+ Видим что мак `000.0c77.ab01` преобразован в индентификатор интерфейса `200:CFF:FE77:AB01`
+ 
+ К маку добавлен link-local префикс `FE80::/64`
+ 
+ таким образом мы получили LLA `FE80::200:CFF:FE77:AB01` с использованием метода EUI-64
+ 
+ Введём локальные адреса вручную
+ 
+ ```
+ R1(config)#interface gigabitEthernet 0/0/0
+ R1(config-if)#ipv6 address fe80::1 link-local
+ R1(config-if)#exit
+ R1(config)#interface gigabitEthernet 0/0/1
+ R1(config-if)#ipv6 address fe80::1 link-local
+ R1(config-if)#end
+ R1#copy running-config startup-config
+ ```
+ 
+ Проверим
+ 
+ ```
+ 
+R1#sho ipv6 interface brief 
+GigabitEthernet0/0/0       [up/up]
+    FE80::1
+    2001:DB8:ACAD:A::1
+GigabitEthernet0/0/1       [up/up]
+    FE80::1
+    2001:DB8:ACAD:1::1
+GigabitEthernet0/0/2       [administratively down/down]
+    unassigned
+Vlan1                      [administratively down/down]
+    unassigned
+R1#
+```
+
+Проверим к каким группам присрединён интерфейс GigabitEthernet0/0/0 на R1
+
+```
+R1#sho ipv6 interface gigabitEthernet 0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up
+  IPv6 is enabled, link-local address is FE80::1
+  No Virtual link-local address(es):
+  Global unicast address(es):
+    2001:DB8:ACAD:A::1, subnet is 2001:DB8:ACAD:A::/64
+  Joined group address(es):
+    FF02::1
+    FF02::1:FF00:1
+```
+
+Видим что он присоединён к группам многоадресной рассылки для всех устройств `FF02::1` и на группу для многоадресной рассылки `FF02::1:FF00:1` это значит что адреса с с последними 24 битами в адресе со значением `00:0001` будут получателями в рассылке с интерфейса gigabitEthernet 0/0/0.
+
+Проверим настройки на PC-B
+
+```
+FastEthernet0 Connection:(default port)
+
+   Connection-specific DNS Suffix..: 
+   Link-local IPv6 Address.........: FE80::290:CFF:FEE8:3973
+   IPv6 Address....................: ::
+   IPv4 Address....................: 0.0.0.0
+   Subnet Mask.....................: 0.0.0.0
+   Default Gateway.................: ::
+                                     0.0.0.0
+```
+
+Видим что интерфейсу назначен только LLA
+
+Активируем IPv6 маршрутизацию на R1
+
+```
+R1(config)#ipv6 unicast-routing 
+```
+
+После этого мы можеи увидеть что интерефейс маршрутизатора состояит в группе рассылки для всех маршрутизаторов `FF02::2`
+
+```
+R1#show ipv6 interface gigabitEthernet 0/0/0
+GigabitEthernet0/0/0 is up, line protocol is up
+  IPv6 is enabled, link-local address is FE80::1
+  No Virtual link-local address(es):
+  Global unicast address(es):
+    2001:DB8:ACAD:A::1, subnet is 2001:DB8:ACAD:A::/64
+  Joined group address(es):
+    FF02::1
+    FF02::2
+    FF02::1:FF00:
+```
+
+проверим ещё раз
+
+```
+C:\>ipconfig
+
+FastEthernet0 Connection:(default port)
+
+   Connection-specific DNS Suffix..: 
+   Link-local IPv6 Address.........: FE80::290:CFF:FEE8:3973
+   IPv6 Address....................: ::
+   IPv4 Address....................: 0.0.0.0
+   Subnet Mask.....................: 0.0.0.0
+   Default Gateway.................: ::
+                                     0.0.0.0
+```
+
+И ничего не поменялось. настроим интерфейс PC-B на автоматическое получение IPv6-адреса и проверим снова
+
+```
+C:\>ipconfig
+
+FastEthernet0 Connection:(default port)
+
+   Connection-specific DNS Suffix..: 
+   Link-local IPv6 Address.........: FE80::290:CFF:FEE8:3973
+   IPv6 Address....................: 2001:DB8:ACAD:A:290:CFF:FEE8:3973
+   IPv4 Address....................: 0.0.0.0
+   Subnet Mask.....................: 0.0.0.0
+   Default Gateway.................: FE80::1
+                                     0.0.0.0
+```
+
+Как получился такой IPv6-адрес на PC-B
+
+ - R1 послал Router Advertisment с префиксом `2001:DB8:ACAD` и идентификатором подсети `A::`
+ - PC-B получил RA, извлёк префикс и добавил свои идентификатор интерфейса `290:CFF:FEE8:3973`
+
+Назначим IPv6-адреса интерфейсу управления на S1#copy
+
+```
+S1(config)#interface vlan 1
+S1(config-if)#no shutdown 
+S1(config-if)#ipv6 address 2001:db8:acad:1::b/64
+S1(config-if)#ipv6 address fe80::b  link-local 
+```
+
+проверим правильность назначения адреса
+
+```
+S1#sho ipv6 int vl 1
+Vlan1 is up, line protocol is up
+  IPv6 is enabled, link-local address is FE80::290:21FF:FED7:1DC
+  No Virtual link-local address(es):
+  Global unicast address(es):
+    2001:DB8:ACAD:1::B, subnet is 2001:DB8:ACAD:1::/64
+  Joined group address(es):
+    FF02::1
+    FF02::1:FF00:B
+    FF02::1:FFD7:1DC
+```
+
+Назначим компьютерам статические IPv6 адреса и проверим сквозное подключение.
+
+Отправим с PC-A  эхо-запрос на FE80::1
+
+```
+C:\>ping fe80::1
+
+Pinging fe80::1 with 32 bytes of data:
+
+Reply from FE80::1: bytes=32 time<1ms TTL=255
+Reply from FE80::1: bytes=32 time<1ms TTL=255
+Reply from FE80::1: bytes=32 time<1ms TTL=255
+Reply from FE80::1: bytes=32 time<1ms TTL=255
+
+Ping statistics for FE80::1:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+```
+
+Отправим эхо-запрос на интерфейс управления S1 с PC-A.
+
+```
+C:\>ping 2001:db8:acad:1::b
+
+Pinging 2001:db8:acad:1::b with 32 bytes of data:
+
+Reply from 2001:DB8:ACAD:1::B: bytes=32 time<1ms TTL=255
+Reply from 2001:DB8:ACAD:1::B: bytes=32 time<1ms TTL=255
+Reply from 2001:DB8:ACAD:1::B: bytes=32 time<1ms TTL=255
+Reply from 2001:DB8:ACAD:1::B: bytes=32 time<1ms TTL=255
+
+Ping statistics for 2001:DB8:ACAD:1::B:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+
+C:\>ping fe80::b
+
+Pinging fe80::b with 32 bytes of data:
+
+Request timed out.
+Request timed out.
+Request timed out.
+Request timed out.
+
+Ping statistics for FE80::B:
+    Packets: Sent = 4, Received = 0, Lost = 4 (100% loss),
+```
+
+по глобальному адресу удаётся получить ответ, от LLA ответа нет
