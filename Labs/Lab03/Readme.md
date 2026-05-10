@@ -295,7 +295,7 @@ FastEthernet0 Connection:(default port)
  - R1 послал Router Advertisment с префиксом `2001:DB8:ACAD` и идентификатором подсети `A::`
  - PC-B получил RA, извлёк префикс и добавил свои идентификатор интерфейса `290:CFF:FEE8:3973`
 
-Назначим IPv6-адреса интерфейсу управления на S1#copy
+Назначим IPv6-адреса интерфейсу управления на S1
 
 ```
 S1(config)#interface vlan 1
