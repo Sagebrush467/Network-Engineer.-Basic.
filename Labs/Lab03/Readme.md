@@ -122,3 +122,17 @@ R1(config-line)#login
 R1(config-line)#end
 R1#copy running-config startup-config
 ```
+
+### Часть 2 Ручная настройка IPv6-адресов
+
+назначим глобальные индивидуальные IPv6-адреса интерфейсам Ethernet на R1
+
+```
+R1(config)#interface gigabitEthernet 0/0/0
+R1(config-if)#no shutdown
+R1(config-if)#ipv6 address 2001:db8:acad:a::1/64
+R1(config-if)#exit
+R1(config)#int gi 0/0/1
+R1(config-if)#no shutdown
+R1(config-if)#ipv6 address 2001:db8:acad:1::1/64
+```
