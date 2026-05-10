@@ -307,16 +307,15 @@ S1(config-if)#ipv6 address fe80::b  link-local
 проверим правильность назначения адреса
 
 ```
-S1#sho ipv6 int vl 1
+S1#show ipv6 interface vlan 1
 Vlan1 is up, line protocol is up
-  IPv6 is enabled, link-local address is FE80::290:21FF:FED7:1DC
+  IPv6 is enabled, link-local address is FE80::B
   No Virtual link-local address(es):
   Global unicast address(es):
     2001:DB8:ACAD:1::B, subnet is 2001:DB8:ACAD:1::/64
   Joined group address(es):
     FF02::1
     FF02::1:FF00:B
-    FF02::1:FFD7:1DC
 ```
 
 Назначим компьютерам статические IPv6 адреса и проверим сквозное подключение.
@@ -360,13 +359,77 @@ C:\>ping fe80::b
 
 Pinging fe80::b with 32 bytes of data:
 
-Request timed out.
-Request timed out.
-Request timed out.
-Request timed out.
+Reply from FE80::B: bytes=32 time<1ms TTL=255
+Reply from FE80::B: bytes=32 time<1ms TTL=255
+Reply from FE80::B: bytes=32 time<1ms TTL=255
+Reply from FE80::B: bytes=32 time<1ms TTL=255
 
 Ping statistics for FE80::B:
-    Packets: Sent = 4, Received = 0, Lost = 4 (100% loss),
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
 ```
 
-по глобальному адресу удаётся получить ответ, от LLA ответа нет
+проведём трассировку между PC-A и PC-B
+
+```
+C:\>tracert 2001:db8:acad:a::3
+
+Tracing route to 2001:db8:acad:a::3 over a maximum of 30 hops: 
+
+  1   0 ms      0 ms      0 ms      2001:DB8:ACAD:1::1
+  2   13 ms     0 ms      0 ms      2001:DB8:ACAD:A::3
+
+Trace complete.
+```
+
+Отправим эхо-запрос из PC-B до PC-A
+
+```
+C:\>ping 2001:DB8:ACAD:1::1
+
+Pinging 2001:DB8:ACAD:1::1 with 32 bytes of data:
+
+Reply from 2001:DB8:ACAD:1::1: bytes=32 time<1ms TTL=255
+Reply from 2001:DB8:ACAD:1::1: bytes=32 time<1ms TTL=255
+Reply from 2001:DB8:ACAD:1::1: bytes=32 time<1ms TTL=255
+Reply from 2001:DB8:ACAD:1::1: bytes=32 time<1ms TTL=255
+
+Ping statistics for 2001:DB8:ACAD:1::1:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+```
+
+Отправим эхо-запрос на локальный адрес канала G0/0/0 на R1
+
+```
+C:\>ping 2001:db8:acad:1::1 
+
+Pinging 2001:db8:acad:1::1 with 32 bytes of data:
+
+Reply from 2001:DB8:ACAD:1::1: bytes=32 time<1ms TTL=255
+Reply from 2001:DB8:ACAD:1::1: bytes=32 time<1ms TTL=255
+Reply from 2001:DB8:ACAD:1::1: bytes=32 time<1ms TTL=255
+Reply from 2001:DB8:ACAD:1::1: bytes=32 time<1ms TTL=255
+
+Ping statistics for 2001:DB8:ACAD:1::1:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+
+C:\>ping fe80::1
+
+Pinging fe80::1 with 32 bytes of data:
+
+Reply from FE80::1: bytes=32 time<1ms TTL=255
+Reply from FE80::1: bytes=32 time<1ms TTL=255
+Reply from FE80::1: bytes=32 time<1ms TTL=255
+Reply from FE80::1: bytes=32 time<1ms TTL=255
+
+Ping statistics for FE80::1:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+
+```
