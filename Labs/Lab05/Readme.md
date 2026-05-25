@@ -344,3 +344,69 @@ VLAN Name                             Status    Ports
 1004 fddinet-default                  active    
 1005 trnet-default                    active    
 ```
+
+- Настроим транкинг на интерфейсе F0/1 коммутаторов и проверим настройки
+
+S1
+
+```
+S1(config)#int fa0/1
+
+S1(config-if)#descr Uplink_to_S2
+
+S1(config-if)#switchport mode trunk
+
+S1(config-if)#switchport trunk native vlan 1000
+S1(config-if)#%SPANTREE-2-RECV_PVID_ERR: Received BPDU with inconsistent peer vlan id 1 on FastEthernet0/1 VLAN1000.
+
+%SPANTREE-2-BLOCK_PVID_LOCAL: Blocking FastEthernet0/1 on VLAN1000. Inconsistent local vlan.
+
+S1(config-if)#switchport trunk allowed vlan 1000
+S1(config-if)#switchport trunk allowed vlan add 10
+S1(config-if)#switchport trunk allowed vlan add 20
+S1(config-if)#switchport trunk allowed vlan add 30
+
+S1#sho run
+!
+interface FastEthernet0/1
+ description Uplink_to_S2
+ switchport trunk native vlan 1000
+ switchport trunk allowed vlan 10,20,30,1000
+ switchport mode trunk
+!
+```
+Для S2 настройки вланов идентичны.
+
+- настроим интерфейс F0/5 на S1 и проверим настройки
+
+```
+S1(config)#interface fastEthernet 0/5
+
+S1(config-if)#description Uplink_to_R1
+
+S1(config-if)#switchport mode trunk
+
+S1(config-if)#switchport trunk native vlan 1000
+
+S1(config-if)#switchport trunk allowed vlan 1000
+S1(config-if)#switchport trunk allowed vlan add 10
+S1(config-if)#switchport trunk allowed vlan add 20
+S1(config-if)#switchport trunk allowed vlan add 30
+
+S1(config-if)#end
+
+S1#copy running-config startup-config 
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+
+S1#sho run
+!
+interface FastEthernet0/5
+ description Uplink_to_R1
+ switchport trunk native vlan 1000
+ switchport trunk allowed vlan 10,20,30,1000
+ switchport mode trunk
+!
+```
+
