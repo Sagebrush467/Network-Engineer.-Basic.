@@ -221,6 +221,29 @@ S2(config)#ex
 S1
 
 ```
+S1(config)#int vl 10
+S1(config-if)#
+%LINK-5-CHANGED: Interface Vlan10, changed state to up
+S1(config-if)#ip address 192.168.10.11 255.255.255.0
+S1(config-if)#ex
+S1(config)#ip default-gateway 192.168.10.1
+```
+S2
+
+```
+S2(config)#int vl 10
+S2(config-if)#
+%LINK-5-CHANGED: Interface Vlan10, changed state to up
+S2(config-if)#ip address 192.168.10.12 255.255.255.0
+S2(config-if)#ex
+S2(config)#ip default-gateway 192.168.10.1
+```
+
+- Назначим все неиспользуемые порты коммутатора VLAN Parking_Lot, настроим их для статического режима доступа и административно деактивируем их.
+
+S1
+
+```
 S1(config)#interface range fastEthernet 0/2-4
 S1(config-if-range)#shutdown 
 S1(config-if-range)#switchport access vlan 999
