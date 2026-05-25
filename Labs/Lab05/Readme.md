@@ -43,7 +43,7 @@
 
 ## Выполнение
 
-Создадим сеть согласно топологии и гастроим базовые параметры маршрутизатора.
+- Создадим сеть согласно топологии и гастроим базовые параметры маршрутизатора.
 
 ```
 Router>en
@@ -88,7 +88,7 @@ Building configuration...
 [OK]
 
 ```
-Настроим базовые параметры коммутаторов. Настройки будут одинаковыми за исключением имени и в большинстве случаев времени если не используется ntp сервер.
+- Настроим базовые параметры коммутаторов. Настройки будут одинаковыми за исключением имени и в большинстве случаев времени если не используется ntp сервер.
 
 ```
 Switch>en
@@ -132,7 +132,7 @@ R1#show clock
 
 ```
 
-настроим время на часах коммутаторов и сохраним конфигурацию
+- настроим время на часах коммутаторов и сохраним конфигурацию
 
 ```
 S1#clock set 10:12:57 20 May 2026
@@ -160,4 +160,102 @@ S1# copy running-config startup-config
 
 ```
 
-После настройки коммутаторов, задакдим настройки ip адреса для PC-A и PC-B
+- После настройки коммутаторов, зададим настройки ip адреса для PC-A и PC-B.
+
+![](01.png)
+
+![](02.png)
+
+- Создадим и назовём необходимые VLAN на каждом коммутаторе.
+
+S1
+
+```
+S1(config)#vlan 10
+S1(config-vlan)#name Upravlenie
+S1(config-vlan)#ex
+
+S1(config)#vlan 20
+S1(config-vlan)#name Sales
+S1(config-vlan)#ex
+
+S1(config)#vlan 30
+S1(config-vlan)#name Operations
+S1(config-vlan)#ex
+
+S1(config)#vlan 999
+S1(config-vlan)#name Parking_Lot
+S1(config-vlan)#ex
+
+S1(config)#Vlan 1000
+S1(config-vlan)#name Sobstvennaya
+S1(config)#exit
+```
+
+S2
+
+```
+S2(config)#vlan 10
+S2(config-vlan)#name Upravlenie
+S2(config-vlan)#ex
+
+S2(config)#vlan 20
+S2(config-vlan)#name Sales
+S2(config-vlan)#ex
+
+S2(config)#vlan 30
+S2(config-vlan)#name Operations
+S2(config-vlan)#ex
+
+S2(config)#vlan 999
+S2(config-vlan)#name Parking_Lot
+S2(config-vlan)#ex
+
+S2(config)#Vlan 1000
+S2(config-vlan)#name Sobstvennaya
+S2(config)#ex
+```
+
+- Настроим интерфейс управления и шлюз по умолчанию на каждом коммутаторе
+
+S1
+
+```
+S1(config)#interface range fastEthernet 0/2-4
+S1(config-if-range)#shutdown 
+S1(config-if-range)#switchport access vlan 999
+S1(config-if-range)#switchport mode access 
+S1(config-if-range)# ex
+
+S1(config)#interface range fastEthernet 0/7-24
+S1(config-if-range)#shutdown
+S1(config-if-range)#switchport access vlan 999
+S1(config-if-range)#switchport mode access 
+S1(config-if-range)#ex
+
+S1(config)#interface range gi0/1-2
+S1(config-if-range)#shutdown 
+S1(config-if-range)#switchport access vlan 999
+S1(config-if-range)#switchport mode access
+```
+
+S2
+
+```
+S2(config)#interface range fastEthernet 0/2-17
+S2(config-if-range)#shutdown
+S2(config-if-range)#switchport access vlan 999
+S2(config-if-range)#switchport mode access
+S2(config-if-range)#ex
+
+S2(config)#interface range fastEthernet 0/19-24
+S2(config-if-range)#shutdown
+S2(config-if-range)#switchport access vlan 999
+S2(config-if-range)#switchport mode access
+S2(config-if-range)#ex
+
+S2(config)#interface range gigabitEthernet 0/1-2
+S2(config-if-range)#shutdown
+S2(config-if-range)#switchport access vlan 999
+S2(config-if-range)#switchport mode access
+```
