@@ -414,6 +414,116 @@ interface FastEthernet0/5
 
 Интерфейс G0/0/1 на R1 по умолчанию отключен, поэтому сейчас линка нет, даже если интерфейс будет настроен марщрутизация проходить не будет.
 
-- Настроим интерфейс G0/0/1 на R1
+- Настроим интерфейс G0/0/1 и его сабинтерфейсы на R1 и проверим настройки
+
+```
+R1#conf t
+
+R1(config)#int g0/0/1
+
+R1(config-if)#no shut
+
+R1(config-if)#
+
+%LINK-5-CHANGED: Interface GigabitEthernet0/0/1, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/0/1, changed state to up
+
+R1(config-if)#ex
 
 
+
+R1(config)#int g0/0/1.10
+
+R1(config-subif)#
+
+%LINK-3-UPDOWN: Interface GigabitEthernet0/0/1.10, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/0/1.10, changed state to up
+
+R1(config-subif)#encapsulation dot1Q 10
+
+R1(config-subif)#ip add 192.168.10.1 255.255.255.0
+
+R1(config-subif)#description Upravlenie
+
+R1(config-if)#ex
+
+
+
+R1(config)#int gi 0/0/1.20
+
+R1(config-subif)#
+
+%LINK-3-UPDOWN: Interface GigabitEthernet0/0/1.20, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/0/1.20, changed state to up
+
+R1(config-subif)#encapsulation dot1Q 20
+
+R1(config-subif)#ip add 192.168.20.1 255.255.255.0
+
+R1(config-subif)#description Sales
+
+R1(config-subif)#ex
+
+
+
+R1(config)#int g0/0/1.30
+
+R1(config-subif)#
+
+%LINK-3-UPDOWN: Interface GigabitEthernet0/0/1.30, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/0/1.30, changed state to up
+
+R1(config-subif)#encapsulation dot1Q 30
+
+R1(config-subif)#ip add 192.168.30.1 255.255.255.0
+
+R1(config-subif)#description Upravlenie
+
+R1(config-subif)#ex
+
+
+
+R1(config)#int g0/0/1.1000
+
+R1(config-subif)#
+
+%LINK-3-UPDOWN: Interface GigabitEthernet0/0/1.1000, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/0/1.1000, changed state to up
+
+R1(config-subif)#encapsulation dot1Q 1000 native 
+
+
+
+R1(config-subif)#do sho run
+
+!
+interface GigabitEthernet0/0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/1.10
+ description Upravlenie
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+!
+interface GigabitEthernet0/0/1.20
+ description Sales
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+!
+interface GigabitEthernet0/0/1.30
+ description Operations
+ encapsulation dot1Q 30
+ ip address 192.168.30.1 255.255.255.0
+!
+interface GigabitEthernet0/0/1.1000
+ encapsulation dot1Q 1000 native
+ no ip address
+!
+```
