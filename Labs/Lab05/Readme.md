@@ -300,8 +300,9 @@ S1(config-if)#do sho vl br
 VLAN Name                             Status    Ports
 ---- -------------------------------- --------- -------------------------------
 1    default                          active    Fa0/1, Fa0/5
-10   Upravlenie                       active    
+10   Upravlenie                       active
 20   Sales                            active    Fa0/6
+30   Operations                       active    Fa0/18
 999  Parking_Lot                      active    Fa0/2, Fa0/3, Fa0/4, Fa0/7
                                                 Fa0/8, Fa0/9, Fa0/10, Fa0/11
                                                 Fa0/12, Fa0/13, Fa0/14, Fa0/15
@@ -330,7 +331,8 @@ S2(config-if)#do sho vl br
 VLAN Name                             Status    Ports
 ---- -------------------------------- --------- -------------------------------
 1    default                          active    Fa0/1
-10   Upravlenie                       active      
+10   Upravlenie                       active
+20   Sales                            active    Fa0/6
 30   Operations                       active    Fa0/18
 999  Parking_Lot                      active    Fa0/2, Fa0/3, Fa0/4, Fa0/5
                                                 Fa0/6, Fa0/7, Fa0/8, Fa0/9
