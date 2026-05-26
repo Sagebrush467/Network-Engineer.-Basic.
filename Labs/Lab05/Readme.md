@@ -526,4 +526,177 @@ interface GigabitEthernet0/0/1.1000
  encapsulation dot1Q 1000 native
  no ip address
 !
+
+
+
+R1(config-subif)#do sho int
+
+GigabitEthernet0/0/1 is up, line protocol is up (connected)
+  Hardware is Lance, address is 0060.5c7a.0602 (bia 0060.5c7a.0602)
+  MTU 1500 bytes, BW 100000 Kbit, DLY 100 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  Full-duplex, 100Mb/s, media type is RJ45
+  ARP type: ARPA, ARP Timeout 04:00:00, 
+  Last input 00:00:08, output 00:00:05, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/75/0 (size/max/drops); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue :0/40 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     0 packets input, 0 bytes, 0 no buffer
+     Received 0 broadcasts, 0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+     0 input packets with dribble condition detected
+     0 packets output, 0 bytes, 0 underruns
+     0 output errors, 0 collisions, 2 interface resets
+     0 babbles, 0 late collision, 0 deferred
+     0 lost carrier, 0 no carrier
+     0 output buffer failures, 0 output buffers swapped out
+
+
+GigabitEthernet0/0/1.10 is up, line protocol is up (connected)
+  Hardware is PQUICC_FEC, address is 0060.5c7a.0602 (bia 0060.5c7a.0602)
+  Internet address is 192.168.10.1/24
+  MTU 1500 bytes, BW 100000 Kbit, DLY 100 usec, 
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation 802.1Q Virtual LAN, Vlan ID 10
+  ARP type: ARPA, ARP Timeout 04:00:00, 
+  Last clearing of "show interface" counters never
+
+
+GigabitEthernet0/0/1.20 is up, line protocol is up (connected)
+  Hardware is PQUICC_FEC, address is 0060.5c7a.0602 (bia 0060.5c7a.0602)
+  Internet address is 192.168.20.1/24
+  MTU 1500 bytes, BW 100000 Kbit, DLY 100 usec, 
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation 802.1Q Virtual LAN, Vlan ID 20
+  ARP type: ARPA, ARP Timeout 04:00:00, 
+  Last clearing of "show interface" counters never
+
+
+GigabitEthernet0/0/1.30 is up, line protocol is up (connected)
+  Hardware is PQUICC_FEC, address is 0060.5c7a.0602 (bia 0060.5c7a.0602)
+  Internet address is 192.168.30.1/24
+  MTU 1500 bytes, BW 100000 Kbit, DLY 100 usec, 
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation 802.1Q Virtual LAN, Vlan ID 30
+  ARP type: ARPA, ARP Timeout 04:00:00, 
+  Last clearing of "show interface" counters never
+
+
+GigabitEthernet0/0/1.1000 is up, line protocol is up (connected)
+  Hardware is PQUICC_FEC, address is 0060.5c7a.0602 (bia 0060.5c7a.0602)
+  MTU 1500 bytes, BW 100000 Kbit, DLY 100 usec, 
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation 802.1Q Virtual LAN, Vlan ID 1000
+  ARP type: ARPA, ARP Timeout 04:00:00, 
+  Last clearing of "show interface" counters never
+Vlan1 is administratively down, line protocol is down
+  Hardware is CPU Interface, address is 0001.4327.8d30 (bia 0001.4327.8d30)
+  MTU 1500 bytes, BW 100000 Kbit, DLY 1000000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 21:40:21, output never, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/40 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     1682 packets input, 530955 bytes, 0 no buffer
+     Received 0 broadcasts (0 IP multicast)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+     563859 packets output, 0 bytes, 0 underruns
+     0 output errors, 23 interface resets
+     0 output buffer failures, 0 output buffers swapped out
 ```
+- Отправим эхо-запрос с PC-A на шлюз по умолчанию, эхо-запрос с PC-A на PC-B, с компьютера PC-A на коммутатор S2.
+
+с PC-A на шлюз
+
+```
+C:\>ping 192.168.20.1
+
+Pinging 192.168.20.1 with 32 bytes of data:
+
+Reply from 192.168.20.1: bytes=32 time<1ms TTL=255
+Reply from 192.168.20.1: bytes=32 time<1ms TTL=255
+Reply from 192.168.20.1: bytes=32 time<1ms TTL=255
+Reply from 192.168.20.1: bytes=32 time<1ms TTL=255
+
+Ping statistics for 192.168.20.1:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+```
+
+с PC-A на PC-B
+
+```
+C:\>ping 192.168.30.3
+
+Pinging 192.168.30.3 with 32 bytes of data:
+
+Reply from 192.168.30.3: bytes=32 time<1ms TTL=127
+Reply from 192.168.30.3: bytes=32 time<1ms TTL=127
+Reply from 192.168.30.3: bytes=32 time<1ms TTL=127
+Reply from 192.168.30.3: bytes=32 time<1ms TTL=127
+
+Ping statistics for 192.168.30.3:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+```
+
+c PC-A на S2
+
+```
+C:\>ping 192.168.10.12
+
+Pinging 192.168.10.12 with 32 bytes of data:
+
+Request timed out.
+Request timed out.
+Reply from 192.168.10.12: bytes=32 time<1ms TTL=254
+Reply from 192.168.10.12: bytes=32 time<1ms TTL=254
+
+Ping statistics for 192.168.10.12:
+    Packets: Sent = 4, Received = 2, Lost = 2 (50% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+
+C:\>ping 192.168.10.12
+
+Pinging 192.168.10.12 with 32 bytes of data:
+
+Reply from 192.168.10.12: bytes=32 time<1ms TTL=254
+Reply from 192.168.10.12: bytes=32 time<1ms TTL=254
+Reply from 192.168.10.12: bytes=32 time<1ms TTL=254
+Reply from 192.168.10.12: bytes=32 time<1ms TTL=254
+
+Ping statistics for 192.168.10.12:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+```
+
+- Выполним трассировку с PC-B до PC-A
+
+```
+C:\>tracert 192.168.20.3
+
+Tracing route to 192.168.20.3 over a maximum of 30 hops: 
+
+  1   0 ms      0 ms      0 ms      192.168.30.1
+  2   1 ms      0 ms      0 ms      192.168.20.3
+
+Trace complete.
+
+C:\>
+```
+
+По трассировке видим что PC-B изначально обращается к своему шлюзу `192.168.30.1` после чего пакет попадает к PC-B `192.168.20.3`, находящимся во Vlan 20.
