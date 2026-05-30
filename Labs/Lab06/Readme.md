@@ -104,5 +104,35 @@ S2#copy running-config startup-config
 S3
 
 ```
+Switch>en
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#no ip domain-lookup
+Switch(config)#hostname S3
+S3(config)#enable secret class
+S3(config)#line con 0
+S3(config-line)#password cisco
+S3(config-line)#logging synchronous
+S3(config-line)#login
+S3(config-line)#exit
+S3(config)#line vty 0 15
+S3(config-line)#password cisco
+S3(config-line)#login
+S3(config-line)#exit
+S3(config)#banner motd c
+Enter TEXT message.  End with the character 'c'.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! c
 
+S3(config)#service password-encryption
+S3(config)#interface vlan 1
+S3(config-if)#ip address 192.168.1.3 255.255.255.0
+S3(config-if)#no shutdown
+S3(config-if)#end
+S3#copy running-config startup-config
 ```
