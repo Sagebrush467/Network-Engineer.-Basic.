@@ -24,4 +24,40 @@
 ![](01.png)
 
 ```
+Switch>en
+Switch#conf t
+
+Switch(config)#no ip domain-lookup
+Switch(config)#hostname S1
+S1(config)#enable secret class
+
+S1(config)#line con 0
+S1(config-line)#password cisco
+S1(config-line)#logging synchronous
+S1(config-line)#login
+S1(config-line)#exit
+
+S1(config)#line vty 0 15
+S1(config-line)#password cisco
+S1(config-line)#login
+S1(config-line)#exit
+
+S1(config)#banner motd c
+Enter TEXT message.  End with the character 'c'.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! c
+
+S1(config)#interface vlan 1
+S1(config-if)#ip address 192.168.1.1 255.255.255.0
+S1(config-if)#end
+
+S1#copy running-config startup-config
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
 ```
