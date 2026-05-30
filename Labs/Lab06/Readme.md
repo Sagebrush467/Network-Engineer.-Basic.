@@ -23,6 +23,8 @@
 
 ![](01.png)
 
+S1
+
 ```
 Switch>en
 Switch#conf t
@@ -52,12 +54,55 @@ Enter TEXT message.  End with the character 'c'.
 !!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! c
 
+S1(config)#service password-encryption
 S1(config)#interface vlan 1
 S1(config-if)#ip address 192.168.1.1 255.255.255.0
+S1(config-if)#no shutdown
 S1(config-if)#end
 
 S1#copy running-config startup-config
 Destination filename [startup-config]? 
 Building configuration...
 [OK]
+```
+
+S2
+
+```
+Switch>en
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#no ip domain-lookup
+Switch(config)#hostname S2
+S2(config)#enable secret class
+S2(config)#line con 0
+S2(config-line)#password cisco
+S2(config-line)#logging synchronous
+S2(config-line)#login
+S2(config-line)#exit
+S2(config)#line vty 0 15
+S2(config-line)#password cisco
+S2(config-line)#login
+S2(config-line)#exit
+S2(config)#banner motd c
+Enter TEXT message.  End with the character 'c'.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!UNAUTHORIZED ACCESS PROHIBITED!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! c
+
+S2(config)#service password-encryption
+S2(config)#interface vlan 1
+S2(config-if)#ip address 192.168.1.2 255.255.255.0
+S2(config-if)#no shutdown
+S2(config-if)#end
+S2#copy running-config startup-config
+```
+S3
+
+```
+
 ```
