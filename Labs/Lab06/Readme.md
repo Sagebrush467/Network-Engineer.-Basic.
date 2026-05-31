@@ -172,3 +172,129 @@ Sending 5, 100-byte ICMP Echos to 192.168.1.2, timeout is 2 seconds:
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 0/0/0 ms
 ```
+
+- Отключим все порты на коммутаторах, настроим подключенные кабелем порты в качестве транковых, и включими порты F0/2 и F0/4 на всех коммутаторах.
+
+S1
+
+```
+S1(config)#interface range gigabitEthernet 0/1-2
+S1(config-if-range)#shutdown
+S1(config-if-range)#exit
+S1(config)#interface range fastEthernet 0/1-24
+S1(config-if-range)#shutdown 
+S1(config-if-range)#exit
+S1(config)#interface range fastEthernet 0/1-4
+S1(config-if-range)#switchport mode trunk
+S1(config-if-range)#exit
+S1(config)#interface fastEthernet 0/2
+S1(config-if)#no shutdown 
+S1(config)#interface fastEthernet 0/4
+S1(config-if)#no shutdown
+```
+
+S2
+
+```
+S2(config)#interface range gigabitEthernet 0/1-2
+S2(config-if-range)#shutdown
+S2(config-if-range)#exit
+S2(config)#interface range fastEthernet 0/1-24
+S2(config-if-range)#shutdown 
+S2(config-if-range)#exit
+S2(config)#interface range fastEthernet 0/1-4
+S2(config-if-range)#switchport mode trunk
+S2(config-if-range)#exit
+S2(config)#interface fastEthernet 0/2
+S2(config-if)#no shutdown 
+S2(config)#interface fastEthernet 0/4
+S2(config-if)#no shutdown
+```
+
+S3
+
+```
+S3(config)#interface range gigabitEthernet 0/1-2
+S3(config-if-range)#shutdown
+S3(config-if-range)#exit
+S3(config)#interface range fastEthernet 0/1-24
+S3(config-if-range)#shutdown 
+S3(config-if-range)#exit
+S3(config)#interface range fastEthernet 0/1-4
+S3(config-if-range)#switchport mode trunk
+S3(config-if-range)#exit
+S3(config)#interface fastEthernet 0/2
+S3(config-if)#no shutdown 
+S3(config)#interface fastEthernet 0/4
+S3(config-if)#no shutdown
+```
+
+- Отобразим даннне протокола spanning-tree
+
+S1
+
+```
+S1#show spanning-tree 
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     000D.BD20.58AD
+             Cost        19
+             Port        2(FastEthernet0/2)
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     00D0.BCA9.455C
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  20
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Fa0/2            Root FWD 19        128.2    P2p
+Fa0/4            Altn BLK 19        128.4    P2p
+```
+
+S2
+
+```
+S2#show spanning-tree 
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     000D.BD20.58AD
+             This bridge is the root
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     000D.BD20.58AD
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  20
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Fa0/2            Desg FWD 19        128.2    P2p
+Fa0/4            Desg FWD 19        128.4    P2p
+```
+
+S3
+
+```
+S3#sho spanning-tree 
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     000D.BD20.58AD
+             Cost        19
+             Port        2(FastEthernet0/2)
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     0050.0F6A.0575
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  20
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Fa0/2            Root FWD 19        128.2    P2p
+Fa0/4            Desg FWD 19        128.4    P2p
+```
