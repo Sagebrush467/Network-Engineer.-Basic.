@@ -317,4 +317,169 @@ Fa0/4            Desg FWD 19        128.4    P2p
 - Корневыми (Root) портами являются Fa0/2 на S1 и Fa0/2 на S3
 - Назначенными (Designated) являются порты Fa0/2 и Fa0/4 на S2, Fa0/4 на S3
 - Альтернативным (Alternate) портом является Fa0/4. Этот порт блокируется.
-- 
+- Этот порт выбран в качестве альтернативного в связи с тем что сумма стоимостей до корневого коммутатора составляет 38 через S3 в то время как на порту Fa0/2 на S2 стоимость составляет 19. Если сумма стоимостей маршрута будет ниже чем на порту Fa0/2 на S2, то этот порт имел бы роль Deginated и не блокировался бы.
+
+- Уменьшим стоимость на порту Fa0/2 на S1 и проверим параметры
+```
+S1(config-if)#spanning-tree vlan 1 cost 18
+
+S1(config-if)#do sho spann
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     000D.BD20.58AD
+             Cost        18
+             Port        2(FastEthernet0/2)
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     00D0.BCA9.455C
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  20
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Fa0/2            Root FWD 18        128.2    P2p
+Fa0/4            Desg LRN 19        128.4    P2p
+
+S1(config-if)#do sho spann
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     000D.BD20.58AD
+             Cost        18
+             Port        2(FastEthernet0/2)
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     00D0.BCA9.455C
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  20
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Fa0/2            Root FWD 18        128.2    P2p
+Fa0/4            Desg FWD 19        128.4    P2p
+```
+
+Сначала порт перешёл в режим изучения, потом он был разблокирован, на S3 порт был заблокирован.
+
+```
+S1(config-if)#do sho spann
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     000D.BD20.58AD
+             Cost        18
+             Port        2(FastEthernet0/2)
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     00D0.BCA9.455C
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  20
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Fa0/2            Root FWD 18        128.2    P2p
+Fa0/4            Desg LRN 19        128.4    P2p
+
+S1(config-if)#do sho spann
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     000D.BD20.58AD
+             Cost        18
+             Port        2(FastEthernet0/2)
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     00D0.BCA9.455C
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  20
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Fa0/2            Root FWD 18        128.2    P2p
+Fa0/4            Desg FWD 19        128.4    P2p
+```
+
+При равной стоимости сравнивались идентификаторы мостов (BID). Поскольку BID у S3 был меньше (ниже MAC-адрес), порт S3 Fa0/4 становился назначенным, а порт S1 Fa0/4 — альтернативным (заблокированным).
+После того как на S1 стоимость корневого порта Fa0/2 уменьшили до 18, стоимость пути от S1 до корня стала 18, а от S3 осталась 19. На линке между S1 (Fa0/4) и S3 (Fa0/4) выигрывает коммутатор с меньшей стоимостью пути к корню — теперь это S1. Поэтому порт S1 Fa0/4 становится назначенным, а порт S3 F0/4 переводится в состояние альтернативного (блокируется).
+
+- Удалим изменения стоимости порта и проверим параметры.
+
+```
+S1(config-if)#do sho spann
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     000D.BD20.58AD
+             Cost        19
+             Port        2(FastEthernet0/2)
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     00D0.BCA9.455C
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  20
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Fa0/2            Root FWD 19        128.2    P2p
+Fa0/4            Altn BLK 19        128.4    P2p
+```
+
+- Включим порты Fa0/1 и Fa0/3 на всех коммутаторах и проверим параметры некорневых коммутаторов
+
+S1
+
+```
+S1(config-if)#do sho spann
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     000D.BD20.58AD
+             Cost        19
+             Port        1(FastEthernet0/1)
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     00D0.BCA9.455C
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  20
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Fa0/2            Altn BLK 19        128.2    P2p
+Fa0/3            Altn BLK 19        128.3    P2p
+Fa0/4            Altn BLK 19        128.4    P2p
+Fa0/1            Root FWD 19        128.1    P2p
+```
+
+S3
+
+```
+S3#sho spa
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     000D.BD20.58AD
+             Cost        19
+             Port        1(FastEthernet0/1)
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     0050.0F6A.0575
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  20
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Fa0/2            Altn BLK 19        128.2    P2p
+Fa0/1            Root FWD 19        128.1    P2p
+Fa0/3            Desg FWD 19        128.3    P2p
+Fa0/4            Desg FWD 19        128.4    P2p
+```
+
+Можно заметить что Root port теперь Fa0/1
