@@ -298,3 +298,14 @@ Interface        Role Sts Cost      Prio.Nbr Type
 Fa0/2            Root FWD 19        128.2    P2p
 Fa0/4            Desg FWD 19        128.4    P2p
 ```
+
+- запишем роль и состояние активных портов
+
+|Коммутатор|Мак-адрес коммутатора|Порт|Роль|Состояние|
+|----------|---------------------|----|--------------|
+|S1|00:D0:BC:A9:45:5C|Fa0/2|Root|Forwarding|
+|S1|00:D0:BC:A9:45:5C|Fa0/4|Alternate|Blocking|
+|S2|00:0D:BD:20:58:AD|Fa0/2|Designated|Forwarding|
+|S2|00:0D:BD:20:58:AD|Fa0/4|Designated|Forwarding|
+|S3|00:50:0F:6A:05:75|Fa0/2|Root|Forwarding|
+|S3|00:50:0F:6A:05:75|Fa0/4|Designated|Forwarding|
