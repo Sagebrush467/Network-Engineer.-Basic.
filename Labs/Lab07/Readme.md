@@ -37,3 +37,28 @@
 - Настройка и проверка двух серверов DHCPv4 на R1
 
 - Настройка и проверка DHCP-ретрансляции на R2
+
+### Базовая настройка маршрутизаторов
+
+- R1
+
+```
+enable
+configure terminal
+hostname R1
+no ip domain-lookup
+enable secret class
+line console 0
+ password cisco
+ login
+line vty 0 4
+ password cisco
+ login
+service password-encryption
+banner motd #Unauthorized access prohibited#
+exit
+clock set 13:41:00 27 Jun 2026
+copy running-config startup-config
+```
+
+- R2
