@@ -62,3 +62,22 @@ copy running-config startup-config
 ```
 
 - R2
+
+```
+enable
+configure terminal
+hostname R2
+no ip domain-lookup
+enable secret class
+line console 0
+ password cisco
+ login
+line vty 0 4
+ password cisco
+ login
+service password-encryption
+banner motd #Unauthorized access prohibited#
+exit
+clock set 13:44 27 Jun 2026
+copy running-config startup-config
+```
