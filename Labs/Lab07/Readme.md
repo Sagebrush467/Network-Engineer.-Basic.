@@ -216,17 +216,45 @@ copy running-config startup-config
 ### Проверка
 
 ```
-C:\>ipconfig /renew
+R1#sho ip dhcp binding 
+IP address       Client-ID/              Lease expiration        Type
+                 Hardware address
+192.168.1.70     0000.0C98.8DD3           --                     Automatic
+192.168.1.134    000B.BEC2.76C1           --                     Automatic
 
-   IP Address......................: 192.168.1.70
-   Subnet Mask.....................: 255.255.255.192
-   Default Gateway.................: 192.168.1.65
-   DNS Server......................: 0.0.0.0
+PC-B
+C:\>ipconfig /all
+FastEthernet0 Connection:(default port)
 
-C:\>ipconfig /renew
-
-   IP Address......................: 192.168.1.134
+   Connection-specific DNS Suffix..: CCNA-lab.com
+   Physical Address................: 000B.BEC2.76C1
+   Link-local IPv6 Address.........: FE80::20B:BEFF:FEC2:76C1
+   IPv6 Address....................: ::
+   IPv4 Address....................: 192.168.1.134
    Subnet Mask.....................: 255.255.255.240
-   Default Gateway.................: 192.168.1.129
-   DNS Server......................: 0.0.0.0
+   Default Gateway.................: ::
+                                     192.168.1.129
+   DHCP Servers....................: 10.0.0.1
+   DHCPv6 IAID.....................: 
+   DHCPv6 Client DUID..............: 00-01-00-01-88-CA-46-80-00-0B-BE-C2-76-C1
+   DNS Servers.....................: ::
+                                     0.0.0.0
+PC-A
+C:\>ipconfig /all
+
+FastEthernet0 Connection:(default port)
+
+   Connection-specific DNS Suffix..: CCNA-lab.com
+   Physical Address................: 0000.0C98.8DD3
+   Link-local IPv6 Address.........: FE80::200:CFF:FE98:8DD3
+   IPv6 Address....................: ::
+   IPv4 Address....................: 192.168.1.70
+   Subnet Mask.....................: 255.255.255.192
+   Default Gateway.................: ::
+                                     192.168.1.65
+   DHCP Servers....................: 192.168.1.65
+   DHCPv6 IAID.....................: 
+   DHCPv6 Client DUID..............: 00-01-00-01-2B-9D-4A-EE-00-00-0C-98-8D-D3
+   DNS Servers.....................: ::
+                                     0.0.0.0
 ```
