@@ -203,3 +203,30 @@ R1(dhcp-config)#lease ?
 R1(dhcp-config)#option 51 ip 192.168.1.70
 %This version of PT does not support options other than 43 and 150
 ```
+### DHCP ретрансляция на R2
+
+```
+interface g0/0/1
+ip helper-address 10.0.0.1
+end
+copy running-config startup-config
+```
+
+
+### Проверка
+
+```
+C:\>ipconfig /renew
+
+   IP Address......................: 192.168.1.70
+   Subnet Mask.....................: 255.255.255.192
+   Default Gateway.................: 192.168.1.65
+   DNS Server......................: 0.0.0.0
+
+C:\>ipconfig /renew
+
+   IP Address......................: 192.168.1.134
+   Subnet Mask.....................: 255.255.255.240
+   Default Gateway.................: 192.168.1.129
+   DNS Server......................: 0.0.0.0
+```
