@@ -299,6 +299,17 @@ end
 copy running-config startup-config
 ```
 
+- DHCP Relay не поддерживается в Cisco Packet Tracer
+
+```
+R2(config-if)#ipv6 dh
+R2(config-if)#ipv6 dhcp ?
+  client  Act as an IPv6 DHCP client
+  server  Act as an IPv6 DHCP server
+R2(config-if)#ipv6 dhcp 
+```
+
+
 - проверка с PC-B
 
 ```
