@@ -73,3 +73,49 @@ shutdown
 end
 copy running-config startup-config
 ```
+
+### Базовая настройка маршрутизаторов
+
+- R1
+
+```
+enable
+configure terminal
+no ip domain-lookup
+banner motd #Unauthorized access prohibited#
+hostname R1
+service password-encryption
+ipv6 unicast-routing
+enable secret class
+line console 0
+password cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+end
+copy running-config startup-config
+```
+
+- R2
+
+```
+enable
+configure terminal
+no ip domain-lookup
+banner motd #Unauthorized access prohibited#
+hostname R2
+service password-encryption
+ipv6 unicast-routing
+enable secret class
+line console 0
+password cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+end
+copy running-config startup-config
+```
