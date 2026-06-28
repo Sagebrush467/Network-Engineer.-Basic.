@@ -119,3 +119,70 @@ exit
 end
 copy running-config startup-config
 ```
+
+### Настройка маршрутизации.
+
+- R1
+
+```
+interface g0/0/0
+ipv6 address 2001:db8:acad:2::1/64
+ipv6 address fe80::1 link-local
+no shutdown
+exit
+interface g0/0/1
+ipv6 address 2001:db8:acad:1::1/64
+ipv6 address fe80::1 link-local
+no shutdown
+exit
+ipv6 route ::/0 2001:db8:acad:2::2
+```
+
+- R2
+
+```
+interface g0/0/0
+ipv6 address 2001:db8:acad:2::2/64
+ipv6 address fe80::2 link-local
+no shutdown
+exit
+interface g0/0/1
+ipv6 address 2001:db8:acad:3::1/64
+ipv6 address fe80::1 link-local
+no shutdown
+exit
+ipv6 route ::/0 2001:db8:acad:2::1
+```
+
+- Проверка
+
+```
+R2#ping 2001:db8:acad:2::1
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 2001:db8:acad:2::1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 0/0/0 ms
+
+R2#ping 2001:db8:acad:1::1
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 2001:db8:acad:1::1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 0/0/1 ms
+
+R1#ping 2001:db8:acad:2::2
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 2001:db8:acad:2::2, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 0/0/0 ms
+
+R1#ping 2001:db8:acad:3::1
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 2001:db8:acad:3::1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 0/0/0 ms
+```
+
