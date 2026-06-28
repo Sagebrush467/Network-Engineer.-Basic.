@@ -210,7 +210,7 @@ FastEthernet0 Connection:(default port)
 
 При использовании SLAAC PC-A самостоятельно сгенерировал идентификатор хоста на снове своего MAC-адреса. Добавив FF:FE в середину мак-адреса и инвертировав седьмой бит.
 
-### Настройка пула на R1
+### Настройка пула Stateless DHCPv6 на R1
 
 ```
 ipv6 dhcp pool R1-STATELESS
@@ -224,7 +224,7 @@ end
 copy running-config startup-config
 ```
 
-- Проверка
+- Проверка с PC-A
 
 ```
 C:\>ipconfig /all
@@ -274,3 +274,48 @@ Ping statistics for 2001:DB8:ACAD:3::1:
 Approximate round trip times in milli-seconds:
     Minimum = 0ms, Maximum = 0ms, Average = 0ms
 ```
+
+### Настройка пула Stateful DHCPv6 на R1
+
+```
+ipv6 dhcp pool R2-STATEFUL
+address prefix 2001:db8:acad:3:aaa::/80
+dns-server 2001:db8:acad::254
+domain-name STATEFUL.com
+exit
+interface g0/0/0
+ipv6 dhcp server R2-STATEFUL
+end
+copy running-config startup-config
+```
+
+### Настройка ретрансляции DHCPv6 на R2
+
+```
+interface g0/0/1
+ipv6 nd managed-config-flag
+ipv6 dhcp relay destination 2001:db8:acad:2::1 g0/0/0
+end
+copy running-config startup-config
+```
+
+- проверка с PC-B
+
+```
+C:\>ipconfig /all
+
+FastEthernet0 Connection:(default port)
+
+   Connection-specific DNS Suffix..: 
+   Physical Address................: 000A.F326.7B14
+   Link-local IPv6 Address.........: FE80::20A:F3FF:FE26:7B14
+   IPv6 Address....................: ::
+   Autoconfiguration IP Address....: 169.254.123.20
+   Subnet Mask.....................: 255.255.0.0
+   Default Gateway.................: FE80::1
+                                     0.0.0.0
+   DHCP Servers....................: 0.0.0.0
+   DHCPv6 IAID.....................: 1992999451
+   DHCPv6 Client DUID..............: 00-01-00-01-8C-44-54-97-00-0A-F3-26-7B-14
+   DNS Servers.....................: ::
+                                     0.0.0.0
