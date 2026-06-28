@@ -260,5 +260,17 @@ Bluetooth Connection:
    DHCPv6 Client DUID..............: 00-01-00-01-84-9D-ED-A6-00-03-E4-1C-C7-AD
    DNS Servers.....................: ::
                                      0.0.0.0
+C:\>ping 2001:db8:acad:3::1
 
+Pinging 2001:db8:acad:3::1 with 32 bytes of data:
 
+Reply from 2001:DB8:ACAD:3::1: bytes=32 time<1ms TTL=254
+Reply from 2001:DB8:ACAD:3::1: bytes=32 time<1ms TTL=254
+Reply from 2001:DB8:ACAD:3::1: bytes=32 time<1ms TTL=254
+Reply from 2001:DB8:ACAD:3::1: bytes=32 time<1ms TTL=254
+
+Ping statistics for 2001:DB8:ACAD:3::1:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+```
