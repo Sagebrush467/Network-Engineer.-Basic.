@@ -223,3 +223,42 @@ ipv6 dhcp server R1-STATELESS
 end
 copy running-config startup-config
 ```
+
+- Проверка
+
+```
+C:\>ipconfig /all
+
+FastEthernet0 Connection:(default port)
+
+   Connection-specific DNS Suffix..: STATELESS.com 
+   Physical Address................: 0003.E41C.C7AD
+   Link-local IPv6 Address.........: FE80::203:E4FF:FE1C:C7AD
+   IPv6 Address....................: 2001:DB8:ACAD:1:203:E4FF:FE1C:C7AD
+   IPv4 Address....................: 0.0.0.0
+   Subnet Mask.....................: 0.0.0.0
+   Default Gateway.................: FE80::1
+                                     0.0.0.0
+   DHCP Servers....................: 0.0.0.0
+   DHCPv6 IAID.....................: 1316044128
+   DHCPv6 Client DUID..............: 00-01-00-01-84-9D-ED-A6-00-03-E4-1C-C7-AD
+   DNS Servers.....................: 2001:DB8:ACAD::254
+                                     0.0.0.0
+
+Bluetooth Connection:
+
+   Connection-specific DNS Suffix..: STATELESS.com 
+   Physical Address................: 00E0.F960.6871
+   Link-local IPv6 Address.........: ::
+   IPv6 Address....................: ::
+   IPv4 Address....................: 0.0.0.0
+   Subnet Mask.....................: 0.0.0.0
+   Default Gateway.................: ::
+                                     0.0.0.0
+   DHCP Servers....................: 0.0.0.0
+   DHCPv6 IAID.....................: 1316044128
+   DHCPv6 Client DUID..............: 00-01-00-01-84-9D-ED-A6-00-03-E4-1C-C7-AD
+   DNS Servers.....................: ::
+                                     0.0.0.0
+
+
