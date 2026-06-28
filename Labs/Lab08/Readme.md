@@ -26,3 +26,50 @@
 - Настройка и проверка состояния DHCPv6 сервера на R1
 - Настройка и проверка DHCPv6 Relay на R2
 
+### Базовая настройка коммутаторов
+
+- S1
+
+```
+enable
+configure terminal
+no ip domain-lookup
+hostname S1
+banner motd #Unauthorized access prohibited#
+service password-encryption
+enable secret class
+line console 0
+password cisco
+login
+line vty 0 15
+password cisco
+login
+exit
+interface range f0/1-4,f0/7-24,g0/1-2
+shutdown
+end
+copy running-config startup-config
+```
+
+- S2
+
+```
+enable
+configure terminal
+no ip domain-lookup
+hostname S2
+banner motd #Unauthorized access prohibited#
+service password-encryption
+enable secret class
+line console 0
+password cisco
+login
+line vty 0 15
+password cisco
+login
+exit
+interface range f0/1-4,f0/6-17,f0/19-24,g0/1-2
+shutdown
+end
+copy running-config startup-config
+```
