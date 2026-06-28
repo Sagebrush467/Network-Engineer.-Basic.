@@ -186,3 +186,40 @@ Sending 5, 100-byte ICMP Echos to 2001:db8:acad:3::1, timeout is 2 seconds:
 Success rate is 100 percent (5/5), round-trip min/avg/max = 0/0/0 ms
 ```
 
+Проверим на PC-A назначение адреса SLAAC от R1
+
+```
+C:\>ipconfig /all
+
+FastEthernet0 Connection:(default port)
+
+   Connection-specific DNS Suffix..: 
+   Physical Address................: 0003.E41C.C7AD
+   Link-local IPv6 Address.........: FE80::203:E4FF:FE1C:C7AD
+   IPv6 Address....................: 2001:DB8:ACAD:1:203:E4FF:FE1C:C7AD
+   IPv4 Address....................: 0.0.0.0
+   Subnet Mask.....................: 0.0.0.0
+   Default Gateway.................: FE80::1
+                                     0.0.0.0
+   DHCP Servers....................: 0.0.0.0
+   DHCPv6 IAID.....................: 
+   DHCPv6 Client DUID..............: 00-01-00-01-84-9D-ED-A6-00-03-E4-1C-C7-AD
+   DNS Servers.....................: ::
+                                     0.0.0.0
+```
+
+При использовании SLAAC PC-A самостоятельно сгенерировал идентификатор хоста на снове своего MAC-адреса. Добавив FF:FE в середину мак-адреса и инвертировав седьмой бит.
+
+### Настройка пула на R1
+
+```
+ipv6 dhcp pool R1-STATELESS
+dns-server 2001:db8:acad::254
+domain-name STATELESS.com
+exit
+interface g0/0/1
+ipv6 nd other-config-flag
+ipv6 dhcp server R1-STATELESS
+end
+copy running-config startup-config
+```
