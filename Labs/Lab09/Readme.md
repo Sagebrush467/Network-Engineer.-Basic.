@@ -445,3 +445,97 @@ interface fastEthernet 0/18
 spanning-tree portfast
 spanning-tree bpduguard enable
 ```
+
+### Проверка сквозной связности
+
+- PC-A
+
+```
+C:\>ping 192.168.10.1 
+
+Pinging 192.168.10.1 with 32 bytes of data:
+
+Reply from 192.168.10.1: bytes=32 time<1ms TTL=255
+Reply from 192.168.10.1: bytes=32 time<1ms TTL=255
+Reply from 192.168.10.1: bytes=32 time<1ms TTL=255
+Reply from 192.168.10.1: bytes=32 time<1ms TTL=255
+
+Ping statistics for 192.168.10.1:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+
+C:\>ping 192.168.10.202
+
+Pinging 192.168.10.202 with 32 bytes of data:
+
+Request timed out.
+Reply from 192.168.10.202: bytes=32 time<1ms TTL=255
+Reply from 192.168.10.202: bytes=32 time<1ms TTL=255
+Reply from 192.168.10.202: bytes=32 time=1ms TTL=255
+
+Ping statistics for 192.168.10.202:
+    Packets: Sent = 4, Received = 3, Lost = 1 (25% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 1ms, Average = 0ms
+
+C:\>ping 192.168.10.11
+
+Pinging 192.168.10.11 with 32 bytes of data:
+
+Reply from 192.168.10.11: bytes=32 time=2ms TTL=128
+Reply from 192.168.10.11: bytes=32 time=1ms TTL=128
+Reply from 192.168.10.11: bytes=32 time<1ms TTL=128
+Reply from 192.168.10.11: bytes=32 time<1ms TTL=128
+
+Ping statistics for 192.168.10.11:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 2ms, Average = 0ms
+```
+
+- PC-B
+
+```
+C:\>ping 192.168.10.1
+
+Pinging 192.168.10.1 with 32 bytes of data:
+
+Reply from 192.168.10.1: bytes=32 time<1ms TTL=255
+Reply from 192.168.10.1: bytes=32 time<1ms TTL=255
+Reply from 192.168.10.1: bytes=32 time<1ms TTL=255
+Reply from 192.168.10.1: bytes=32 time=7ms TTL=255
+
+Ping statistics for 192.168.10.1:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 7ms, Average = 1ms
+
+C:\>ping 192.168.10.201
+
+Pinging 192.168.10.201 with 32 bytes of data:
+
+Request timed out.
+Reply from 192.168.10.201: bytes=32 time<1ms TTL=255
+Reply from 192.168.10.201: bytes=32 time<1ms TTL=255
+Reply from 192.168.10.201: bytes=32 time<1ms TTL=255
+
+Ping statistics for 192.168.10.201:
+    Packets: Sent = 4, Received = 3, Lost = 1 (25% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+
+C:\>ping 192.168.10.10
+
+Pinging 192.168.10.10 with 32 bytes of data:
+
+Reply from 192.168.10.10: bytes=32 time<1ms TTL=128
+Reply from 192.168.10.10: bytes=32 time<1ms TTL=128
+Reply from 192.168.10.10: bytes=32 time<1ms TTL=128
+Reply from 192.168.10.10: bytes=32 time<1ms TTL=128
+
+Ping statistics for 192.168.10.10:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+```
