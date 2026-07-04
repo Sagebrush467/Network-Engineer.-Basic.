@@ -262,3 +262,17 @@ Fa0/24                       disabled 999        auto    auto  10/100BaseTX
 Gig0/1                       disabled 999        auto    auto  10/100/1000BaseTX
 Gig0/2                       disabled 999        auto    auto  10/100/1000BaseTX
 ```
+
+## Документирование и реализация функций безопасности порта
+
+- конфигурация безопасности порта по умолчанию
+
+|Функция|Настройка по умолчанию|
+|-------|----------------------|
+|Защита портов|Disabled|
+|Максимальное количество записей MAC-адресов|1|
+|Режим проверки на нарушение безопасности|Shutdown|
+|Aging Time|0 mins|
+|Aging Type|Absolute|
+|Secure Static Address Aging|Disabled|
+|Sticky MAC Address|0|
