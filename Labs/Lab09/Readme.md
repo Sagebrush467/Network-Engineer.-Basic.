@@ -118,3 +118,58 @@ description Management SVI
 end
 copy running-config startup-config
 ```
+
+### Настройка безопасности коммутаторов
+
+- Релизация магистральных соединений 802.1Q и проверка 
+
+- S1
+
+```
+interface fastEthernet 0/1
+switchport trunk native vlan 333
+switchport mode trunk
+switchport nonegotiate
+end
+```
+
+- S2
+
+```
+interface fastEthernet 0/1
+switchport trunk native vlan 333
+switchport mode trunk
+switchport nonegotiate
+```
+
+- проверка
+
+```
+S1#show interface trunk
+Port        Mode         Encapsulation  Status        Native vlan
+Fa0/1       on           802.1q         trunking      333
+
+Port        Vlans allowed on trunk
+Fa0/1       1-1005
+
+Port        Vlans allowed and active in management domain
+Fa0/1       1,10,333,999
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Fa0/1       1,10,333,999
+```
+
+```
+S2#show interfaces trunk 
+Port        Mode         Encapsulation  Status        Native vlan
+Fa0/1       on           802.1q         trunking      333
+
+Port        Vlans allowed on trunk
+Fa0/1       1-1005
+
+Port        Vlans allowed and active in management domain
+Fa0/1       1,10,333,999
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Fa0/1       1,10,333,999
+```
