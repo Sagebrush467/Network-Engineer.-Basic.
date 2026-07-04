@@ -276,3 +276,22 @@ Gig0/2                       disabled 999        auto    auto  10/100/1000BaseTX
 |Aging Type|Absolute|
 |Secure Static Address Aging|Disabled|
 |Sticky MAC Address|0|
+
+- настройка port-security на S1
+
+```
+interface fastEthernet 0/6
+switchport port-security
+switchport port-security maximum 3
+switchport port-security violation restrict
+switchport port-security aging time 60
+```
+
+в cisco packet tracer не поддерживает изменение aging type
+
+```
+S1(config-if)#switchport port-security aging ?
+  time  Port-security aging time
+Switch(config-if)#switchport port-security aging ?
+  time  Port-security aging time
+ ```
