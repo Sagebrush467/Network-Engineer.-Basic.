@@ -62,3 +62,59 @@ GigabitEthernet0/0/2   unassigned      YES NVRAM  administratively down down
 Loopback0              10.10.1.1       YES manual up                    up 
 Vlan1                  unassigned      YES NVRAM  administratively down down
 ```
+
+### Базовая настройка коммутаторов
+
+- S1
+
+```
+enable
+configure terminal
+hostname S1
+no ip domain-lookup
+interface fastEthernet 0/5
+description Link to R1
+interface fastEthernet 0/6
+description Link to PC-A
+interface fastEthernet 0/1
+description Trunk to S2
+ip default-gateway 192.168.10.1
+vlan 10
+name Management
+vlan 333
+name Native
+vlan 999
+name ParkingLot
+interface vlan 10
+ip address 192.168.10.201 255.255.255.0
+no shutdown
+description Management SVI
+end
+copy running-config startup-config
+```
+
+- S2
+
+```
+enable
+configure terminal
+hostname S2
+no ip domain-lookup
+interface fastEthernet 0/1
+description Trunk to S1
+interface fastEthernet 0/18
+description Link to PC-B
+ip default-gateway 192.168.10.1
+vlan 10
+name Management
+vlan 333
+name Native
+vlan 999
+name ParkingLot
+interface vlan 10
+ip address 192.168.10.202 255.255.255.0
+no shutdown
+description Management SVI
+end
+copy running-config startup-config
+```
