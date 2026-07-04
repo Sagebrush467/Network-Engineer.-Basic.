@@ -295,3 +295,14 @@ S1(config-if)#switchport port-security aging ?
 Switch(config-if)#switchport port-security aging ?
   time  Port-security aging time
  ```
+
+- настройка port-security на S2
+
+```
+interface fastEthernet 0/18
+switchport port-security
+switchport port-security maximum 2
+switchport port-security violation protect
+switchport port-security aging time 60
+switchport port-security mac-address sticky
+```
