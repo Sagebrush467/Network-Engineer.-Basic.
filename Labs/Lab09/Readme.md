@@ -119,9 +119,9 @@ end
 copy running-config startup-config
 ```
 
-### Настройка безопасности коммутаторов
+## Настройка безопасности коммутаторов
 
-- Релизация магистральных соединений 802.1Q и проверка 
+### Релизация магистральных соединений 802.1Q и проверка 
 
 - S1
 
@@ -172,4 +172,93 @@ Fa0/1       1,10,333,999
 
 Port        Vlans in spanning tree forwarding state and not pruned
 Fa0/1       1,10,333,999
+```
+### Настройка портов доступа и безопасность неиспользуемых портов
+
+- S1
+
+```
+interface fastEthernet 0/5
+switchport mode access
+switchport access vlan 10
+interface fastEthernet 0/6
+switchport mode access
+switchport access vlan 10
+interface range fastEthernet 0/2-4, fastEthernet 0/7-24, gigabitEthernet 0/1-2
+switchport access vlan 999
+shutdown
+```
+- S2
+
+```
+interface fastEthernet 0/18
+switchport mode access
+switchport access vlan 10
+interface range fastEthernet 0/2-17, fastEthernet 0/19-24, gigabitEthernet 0/1-2
+switchport access vlan 999
+shutdown
+```
+
+- Проверка
+
+```
+S1#show interfaces status
+Port      Name               Status       Vlan       Duplex  Speed Type
+Fa0/1     Trunk to S2        connected    trunk      a-full  a-100 10/100BaseTX
+Fa0/2                        disabled 999        auto    auto  10/100BaseTX
+Fa0/3                        disabled 999        auto    auto  10/100BaseTX
+Fa0/4                        disabled 999        auto    auto  10/100BaseTX
+Fa0/5     Link to R1         connected    10         a-full  a-100 10/100BaseTX
+Fa0/6     Link to PC-A       connected    10         a-full  a-100 10/100BaseTX
+Fa0/7                        disabled 999        auto    auto  10/100BaseTX
+Fa0/8                        disabled 999        auto    auto  10/100BaseTX
+Fa0/9                        disabled 999        auto    auto  10/100BaseTX
+Fa0/10                       disabled 999        auto    auto  10/100BaseTX
+Fa0/11                       disabled 999        auto    auto  10/100BaseTX
+Fa0/12                       disabled 999        auto    auto  10/100BaseTX
+Fa0/13                       disabled 999        auto    auto  10/100BaseTX
+Fa0/14                       disabled 999        auto    auto  10/100BaseTX
+Fa0/15                       disabled 999        auto    auto  10/100BaseTX
+Fa0/16                       disabled 999        auto    auto  10/100BaseTX
+Fa0/17                       disabled 999        auto    auto  10/100BaseTX
+Fa0/18                       disabled 999        auto    auto  10/100BaseTX
+Fa0/19                       disabled 999        auto    auto  10/100BaseTX
+Fa0/20                       disabled 999        auto    auto  10/100BaseTX
+Fa0/21                       disabled 999        auto    auto  10/100BaseTX
+Fa0/22                       disabled 999        auto    auto  10/100BaseTX
+Fa0/23                       disabled 999        auto    auto  10/100BaseTX
+Fa0/24                       disabled 999        auto    auto  10/100BaseTX
+Gig0/1                       disabled 999        auto    auto  10/100/1000BaseTX
+Gig0/2                       disabled 999        auto    auto  10/100/1000BaseTX
+```
+
+```
+S2#show interfaces status 
+Port      Name               Status       Vlan       Duplex  Speed Type
+Fa0/1     Trunk to S1        connected    trunk      a-full  a-100 10/100BaseTX
+Fa0/2                        disabled 999        auto    auto  10/100BaseTX
+Fa0/3                        disabled 999        auto    auto  10/100BaseTX
+Fa0/4                        disabled 999        auto    auto  10/100BaseTX
+Fa0/5                        disabled 999        auto    auto  10/100BaseTX
+Fa0/6                        disabled 999        auto    auto  10/100BaseTX
+Fa0/7                        disabled 999        auto    auto  10/100BaseTX
+Fa0/8                        disabled 999        auto    auto  10/100BaseTX
+Fa0/9                        disabled 999        auto    auto  10/100BaseTX
+Fa0/10                       disabled 999        auto    auto  10/100BaseTX
+Fa0/11                       disabled 999        auto    auto  10/100BaseTX
+Fa0/12                       disabled 999        auto    auto  10/100BaseTX
+Fa0/13                       disabled 999        auto    auto  10/100BaseTX
+Fa0/14                       disabled 999        auto    auto  10/100BaseTX
+Fa0/15                       disabled 999        auto    auto  10/100BaseTX
+Fa0/16                       disabled 999        auto    auto  10/100BaseTX
+Fa0/17                       disabled 999        auto    auto  10/100BaseTX
+Fa0/18    Link to PC-B       connected    10         a-full  a-100 10/100BaseTX
+Fa0/19                       disabled 999        auto    auto  10/100BaseTX
+Fa0/20                       disabled 999        auto    auto  10/100BaseTX
+Fa0/21                       disabled 999        auto    auto  10/100BaseTX
+Fa0/22                       disabled 999        auto    auto  10/100BaseTX
+Fa0/23                       disabled 999        auto    auto  10/100BaseTX
+Fa0/24                       disabled 999        auto    auto  10/100BaseTX
+Gig0/1                       disabled 999        auto    auto  10/100/1000BaseTX
+Gig0/2                       disabled 999        auto    auto  10/100/1000BaseTX
 ```
