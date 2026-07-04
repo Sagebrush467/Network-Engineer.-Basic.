@@ -306,3 +306,34 @@ switchport port-security violation protect
 switchport port-security aging time 60
 switchport port-security mac-address sticky
 ```
+
+
+- Проверка
+
+```
+S1#show port-security interface fastEthernet 0/6
+Port Security              : Enabled
+Port Status                : Secure-up
+Violation Mode             : Restrict
+Aging Time                 : 60 mins
+Aging Type                 : Absolute
+SecureStatic Address Aging : Disabled
+Maximum MAC Addresses      : 3
+Total MAC Addresses        : 1
+Configured MAC Addresses   : 0
+Sticky MAC Addresses       : 0
+Last Source Address:Vlan   : 0090.0C38.AE18:10
+Security Violation Count   : 0
+```
+```
+S1#show port-security address 
+               Secure Mac Address Table
+-----------------------------------------------------------------------------
+Vlan    Mac Address       Type                          Ports   Remaining Age
+                                                                   (mins)
+----    -----------       ----                          -----   -------------
+10	0090.0C38.AE18	DynamicConfigured	FastEthernet0/6		-
+-----------------------------------------------------------------------------
+Total Addresses in System (excluding one mac per port)     : 0
+Max Addresses limit in System (excluding one mac per port) : 1024
+```
