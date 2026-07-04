@@ -366,3 +366,62 @@ Vlan    Mac Address       Type                          Ports   Remaining Age
 Total Addresses in System (excluding one mac per port)     : 0
 Max Addresses limit in System (excluding one mac per port) : 1024
 ```
+
+### Реализация DHCP snooping
+
+- S2
+
+```
+ip dhcp snooping
+ip dhcp snooping vlan 10
+interface fastEthernet 0/1
+ip dhcp snooping trust
+interface fastEthernet 0/18
+ip dhcp snooping limit rate 5
+```
+
+- Проверка
+
+- S2
+
+```
+S2#show ip dhcp snooping
+Switch DHCP snooping is enabled
+DHCP snooping is configured on following VLANs:
+10
+Insertion of option 82 is enabled
+Option 82 on untrusted port is not allowed
+Verification of hwaddr field is enabled
+Interface                  Trusted    Rate limit (pps)
+-----------------------    -------    ----------------
+FastEthernet0/1            yes        unlimited       
+FastEthernet0/18           no         5     
+```
+
+- PC-B
+
+```
+C:\>ipconfig /release
+
+   IP Address......................: 0.0.0.0
+   Subnet Mask.....................: 0.0.0.0
+   Default Gateway.................: 0.0.0.0
+   DNS Server......................: 0.0.0.0
+
+C:\>ipconfig /renew
+
+   IP Address......................: 192.168.10.11
+   Subnet Mask.....................: 255.255.255.0
+   Default Gateway.................: 192.168.10.1
+   DNS Server......................: 0.0.0.0
+```
+
+- S2
+
+```
+S2#show ip dhcp snooping binding
+MacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface
+------------------  ---------------  ----------  -------------  ----  -----------------
+00:E0:B0:1B:3A:09   192.168.10.11    0           dhcp-snooping  10    FastEthernet0/18
+Total number of bindings: 1
+```
