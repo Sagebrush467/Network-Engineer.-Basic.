@@ -425,3 +425,23 @@ MacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface
 00:E0:B0:1B:3A:09   192.168.10.11    0           dhcp-snooping  10    FastEthernet0/18
 Total number of bindings: 1
 ```
+
+- Реализация PortFast и BPDU Guard
+
+- S1
+```
+interface fastEthernet 0/5
+spanning-tree portfast
+spanning-tree bpduguard enable
+interface fastEthernet 0/6
+spanning-tree portfast
+spanning-tree bpduguard enable
+```
+
+- S2
+
+```
+interface fastEthernet 0/18
+spanning-tree portfast
+spanning-tree bpduguard enable
+```
