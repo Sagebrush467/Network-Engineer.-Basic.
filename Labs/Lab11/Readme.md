@@ -366,3 +366,6 @@ C:\>ssh -l SSHadmin 172.16.1.1
 
 Password: 
 ```
+![](1.png)
+
+![](2.png)
