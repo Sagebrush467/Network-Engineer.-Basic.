@@ -231,3 +231,58 @@ switchport trunk allowed vlan 20,30,40,1000
 end
 copy running-config startup-config
 ```
+## Настройка SSH
+
+- на каждом устройстве
+
+```
+username SSHadmin secret $cisco123!
+ip domain-name ccna-lab.com
+crypto key generate rsa general-keys modulus 1024
+ip ssh version 2
+line vty 0 4
+transport input ssh
+login local
+```
+
+## Настройка ACL
+
+- Для Sales
+
+```
+ip access-list extended Sales2
+10 deny tcp 10.40.0.0 0.0.0.255 10.20.0.0 0.0.0.255 eq 22
+20 deny tcp 10.40.0.0 0.0.0.255 10.20.0.0 0.0.0.255 eq www
+30 deny tcp 10.40.0.0 0.0.0.255 10.20.0.0 0.0.0.255 eq 443
+40 deny tcp 10.40.0.0 0.0.0.255 host 10.40.0.1 eq www
+50 deny tcp 10.40.0.0 0.0.0.255 host 10.40.0.1 eq 443
+60 deny tcp 10.40.0.0 0.0.0.255 host 10.30.0.1 eq www
+70 deny tcp 10.40.0.0 0.0.0.255 host 10.30.0.1 eq 443
+80 deny tcp 10.40.0.0 0.0.0.255 host 10.20.0.1 eq www
+90 deny tcp 10.40.0.0 0.0.0.255 host 10.20.0.1 eq 443
+100 deny icmp 10.40.0.0 0.0.0.255 10.20.0.0 0.0.0.255 echo
+110 deny icmp 10.40.0.0 0.0.0.255 10.30.0.0 0.0.0.255 echo
+120 permit ip any any
+```
+
+Примечание: в CPT есть ограничения по добавлению строк в именованный список. CPT не сохраняет строки с номером выше 180 и строки с номером не кратным 10
+
+использование HTTP/3 и HTTPS/3 не было учтено в этой работе. Поэтому UDP трафик будет проходить без фильтрации. В реальных условиях необходимо это учитывать и добавлять в ACL. 
+
+
+- для Operations
+
+```
+ip access-list extended Ops
+10 deny icmp 10.30.0.0 0.0.0.255 10.40.0.0 0.0.0.255 echo
+20 permit icmp 10.30.0.0 0.0.0.255 any echo
+```
+
+- Применим листы для соответствующих интерфейсов.
+
+```
+nterface g0/0/1.40
+ip access-group Sales2 in
+interface g0/0/1.30
+ip access-group Ops in
+```
