@@ -286,3 +286,83 @@ ip access-group Sales2 in
 interface g0/0/1.30
 ip access-group Ops in
 ```
+## Проверка
+
+- PC-A
+
+```
+C:\>ping 10.40.0.10
+
+Pinging 10.40.0.10 with 32 bytes of data:
+
+Reply from 10.30.0.1: Destination host unreachable.
+Reply from 10.30.0.1: Destination host unreachable.
+Reply from 10.30.0.1: Destination host unreachable.
+Reply from 10.30.0.1: Destination host unreachable.
+
+Ping statistics for 10.40.0.10:
+    Packets: Sent = 4, Received = 0, Lost = 4 (100% loss),
+
+C:\>ping 10.20.0.1
+
+Pinging 10.20.0.1 with 32 bytes of data:
+
+Reply from 10.20.0.1: bytes=32 time<1ms TTL=255
+Reply from 10.20.0.1: bytes=32 time<1ms TTL=255
+Reply from 10.20.0.1: bytes=32 time<1ms TTL=255
+Reply from 10.20.0.1: bytes=32 time=1ms TTL=255
+
+Ping statistics for 10.20.0.1:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 1ms, Average = 0ms
+```
+
+- PC-B
+```
+C:\>ping 10.30.0.10
+
+Pinging 10.30.0.10 with 32 bytes of data:
+
+Reply from 10.40.0.1: Destination host unreachable.
+Reply from 10.40.0.1: Destination host unreachable.
+Reply from 10.40.0.1: Destination host unreachable.
+Reply from 10.40.0.1: Destination host unreachable.
+
+Ping statistics for 10.30.0.10:
+    Packets: Sent = 4, Received = 0, Lost = 4 (100% loss),
+
+C:\>ping 10.20.0.1
+
+Pinging 10.20.0.1 with 32 bytes of data:
+
+Reply from 10.40.0.1: Destination host unreachable.
+Reply from 10.40.0.1: Destination host unreachable.
+Reply from 10.40.0.1: Destination host unreachable.
+Reply from 10.40.0.1: Destination host unreachable.
+
+Ping statistics for 10.20.0.1:
+    Packets: Sent = 4, Received = 0, Lost = 4 (100% loss),
+
+C:\>ping 172.20.1.10
+
+Pinging 172.20.1.10 with 32 bytes of data:
+
+Reply from 172.20.1.10: bytes=32 time<1ms TTL=255
+Reply from 172.20.1.10: bytes=32 time<1ms TTL=255
+Reply from 172.20.1.10: bytes=32 time=10ms TTL=255
+Reply from 172.20.1.10: bytes=32 time=10ms TTL=255
+
+Ping statistics for 172.20.1.10:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 10ms, Average = 5ms
+
+C:\>ssh -l SSHadmin 10.20.0.4
+
+% Connection timed out; remote host not responding
+
+C:\>ssh -l SSHadmin 172.16.1.1
+
+Password: 
+```
