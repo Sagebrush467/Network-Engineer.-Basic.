@@ -369,3 +369,25 @@ Password:
 ![](1.png)
 
 ![](2.png)
+
+- R1
+
+```
+R1#show access-lists
+Extended IP access list Sales2
+    10 deny tcp 10.40.0.0 0.0.0.255 10.20.0.0 0.0.0.255 eq 22 (12 match(es))
+    20 deny tcp 10.40.0.0 0.0.0.255 10.20.0.0 0.0.0.255 eq www
+    30 deny tcp 10.40.0.0 0.0.0.255 10.20.0.0 0.0.0.255 eq 443 (12 match(es))
+    40 deny tcp 10.40.0.0 0.0.0.255 host 10.40.0.1 eq www
+    50 deny tcp 10.40.0.0 0.0.0.255 host 10.40.0.1 eq 443
+    60 deny tcp 10.40.0.0 0.0.0.255 host 10.30.0.1 eq www
+    70 deny tcp 10.40.0.0 0.0.0.255 host 10.30.0.1 eq 443
+    80 deny tcp 10.40.0.0 0.0.0.255 host 10.20.0.1 eq www
+    90 deny tcp 10.40.0.0 0.0.0.255 host 10.20.0.1 eq 443
+    100 deny icmp 10.40.0.0 0.0.0.255 10.20.0.0 0.0.0.255 echo (4 match(es))
+    110 deny icmp 10.40.0.0 0.0.0.255 10.30.0.0 0.0.0.255 echo (4 match(es))
+    120 permit ip any any (29 match(es))
+Extended IP access list Ops
+    10 deny icmp 10.30.0.0 0.0.0.255 10.40.0.0 0.0.0.255 echo (4 match(es))
+    20 permit icmp 10.30.0.0 0.0.0.255 any echo (4 match(es))
+```
